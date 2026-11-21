@@ -191,6 +191,11 @@ static flc_t fl_cv = {fl_px, FLW, FLH};
 #define C_SEC(s) ((uint8_t)(52 + (s)))
 static uint32_t cf_pal[64];
 
+/* lcd.c sends the stock FM-1 panel table: the panel shows the palette as designed, no correction needed */
+#ifndef CF_PANEL_PLAIN
+#define CF_PANEL_PLAIN 1
+#endif
+
 #ifndef CF_EMU
 /* The FM-1's panel lifts the dark tones and washes out soft colours: the palette, made on a monitor, came out pale and
  * grey there (the owner's photos, 2026-10-15). On the device every colour is recalculated once, here: its saturation

@@ -106,7 +106,8 @@ static void lcd_blit(uint32_t x, uint32_t y, uint32_t w, uint32_t h, const uint1
  * shifted to blue (the owner's photos, 2026-10-15). The block below is TFT_eSPI's ST7789 init for 240 x 240 IPS
  * panels (Bodmer/TFT_eSPI, TFT_Drivers/ST7789_Init.h): porch, gate, VCOM, power, frame rate, positive and negative
  * gamma. Tried on the device (rc5): paler and greyer than the defaults, so it is off; CF_LCD_TUNED builds it in.
- * The colours are now corrected in the palette (cf_state.h cf_panel_fix). */
+ * The colours were then corrected in the palette (cf_state.h cf_panel_fix). Now the stock FM-1 v016 table is sent
+ * instead, so the palette goes out as designed (cf_state.h CF_PANEL_PLAIN). */
 static const uint8_t LCD_SEQ[] = {
     0x01, 0,                     /* SWRESET */
     0x00, 1, 150,
@@ -114,6 +115,18 @@ static const uint8_t LCD_SEQ[] = {
     0x00, 1, 120,
     0x3A, 1, 0x55,               /* COLMOD: RGB565 */
     0x36, 1, 0x00,               /* MADCTL: top-left origin, RGB order */
+    /* the stock FM-1 v016 panel table (read from FM-1_016 app.bin): porch, gate, VCOM, GVDD, power, gamma */
+    0xB2, 5, 0x0C, 0x0C, 0x0C, 0x00, 0x33,                   /* PORCTRL */
+    0xB7, 1, 0x56,                                           /* GCTRL */
+    0xBB, 1, 0x18,                                           /* VCOMS */
+    0xC0, 1, 0x2C,                                           /* LCMCTRL */
+    0xC2, 1, 0x01,                                           /* VDVVRHEN */
+    0xC3, 1, 0x1F,                                           /* VRHS */
+    0xC4, 1, 0x20,                                           /* VDVSET */
+    0xC6, 1, 0x0F,                                           /* FRCTR2: 60 Hz */
+    0xD0, 2, 0xA6, 0xA1,                                     /* PWCTRL1 */
+    0xE0, 14, 0xD0, 0x0D, 0x14, 0x0B, 0x0B, 0x07, 0x3A, 0x44, 0x50, 0x08, 0x13, 0x13, 0x2D, 0x32,   /* PVGAMCTRL */
+    0xE1, 14, 0xD0, 0x0D, 0x14, 0x0B, 0x0B, 0x07, 0x3A, 0x44, 0x50, 0x08, 0x13, 0x13, 0x2D, 0x32,   /* NVGAMCTRL */
 #ifdef CF_LCD_TUNED
     0xB2, 5, 0x0C, 0x0C, 0x00, 0x33, 0x33,                   /* PORCTRL */
     0xB7, 1, 0x35,                                           /* GCTRL */
